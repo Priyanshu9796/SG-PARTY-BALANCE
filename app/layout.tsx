@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import AppShell from '@/components/ui/AppShell'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Party Balance — Payment Tracking Register',
-  description: 'Simple party-wise payment tracking. Track supplier payables and customer receivables with ease.',
+  description: 'Simple party-wise payment tracking. Track supplier payables and customer receivables.',
 }
 
 export default function RootLayout({
@@ -15,8 +16,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className={inter.className}>{children}</body>
+    <html lang="en">
+      <body className={inter.className}>
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   )
 }
