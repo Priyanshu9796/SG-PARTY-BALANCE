@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { z } from 'zod'
+import { Eye, EyeOff } from 'lucide-react'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -46,24 +48,28 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md animate-slide-up">
-        {/* Logo / Brand */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl mb-4 shadow-lg shadow-indigo-500/30">
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 flex items-end sm:items-center justify-center">
+      <div className="w-full sm:max-w-md animate-slide-up">
+        {/* Card — slides up from bottom on mobile */}
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl
+                        rounded-t-3xl sm:rounded-2xl
+                        px-6 sm:px-8 pt-8 pb-10 sm:py-8">
+
+          {/* Pull bar — mobile only */}
+          <div className="sm:hidden w-9 h-1 bg-white/30 rounded-full mx-auto mb-6" />
+
+          {/* Brand */}
+          <div className="text-center mb-7">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-indigo-600 rounded-2xl mb-3 shadow-lg shadow-indigo-500/40">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">SG ENTERPRISES</h1>
+            <p className="text-slate-400 mt-1 text-sm">ACCOUNTING SOFTWARE</p>
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">SG ENTERPRISES</h1>
-          <p className="text-slate-400 mt-2 text-sm">ACCOUNTS SOFTWARE</p>
-        </div>
 
-        {/* Login Card */}
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-xl font-semibold text-white mb-6">Sign in to your account</h2>
-
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-4">
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1.5">
@@ -73,12 +79,15 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 autoComplete="email"
+                autoCapitalize="none"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-lg bg-white/10 border border-white/20 px-3.5 py-2.5 text-white
-                           placeholder:text-slate-500 text-sm focus:outline-none focus:border-indigo-400
-                           focus:ring-2 focus:ring-indigo-400/30 transition-all duration-150"
+                style={{ fontSize: '16px' }}
+                className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white
+                           placeholder:text-slate-500 focus:outline-none focus:border-indigo-400
+                           focus:ring-2 focus:ring-indigo-400/30 transition-all duration-150
+                           min-h-[48px]"
               />
             </div>
 
@@ -87,22 +96,34 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1.5">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-lg bg-white/10 border border-white/20 px-3.5 py-2.5 text-white
-                           placeholder:text-slate-500 text-sm focus:outline-none focus:border-indigo-400
-                           focus:ring-2 focus:ring-indigo-400/30 transition-all duration-150"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  style={{ fontSize: '16px' }}
+                  className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 pr-12 text-white
+                             placeholder:text-slate-500 focus:outline-none focus:border-indigo-400
+                             focus:ring-2 focus:ring-indigo-400/30 transition-all duration-150
+                             min-h-[48px]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4.5 h-4.5 w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+                </button>
+              </div>
             </div>
 
             {/* Error */}
             {error && (
-              <div className="flex items-center gap-2 bg-red-500/20 border border-red-500/30 rounded-lg px-3.5 py-2.5">
+              <div className="flex items-center gap-2 bg-red-500/20 border border-red-500/30 rounded-xl px-4 py-3">
                 <svg className="w-4 h-4 text-red-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
@@ -115,9 +136,11 @@ export default function LoginPage() {
               id="login-btn"
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/60 text-white font-semibold
-                         py-3 rounded-lg transition-all duration-150 text-sm mt-2 flex items-center justify-center gap-2
-                         focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-transparent"
+              className="w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:bg-indigo-600/60
+                         text-white font-bold py-3.5 rounded-xl transition-all duration-150 text-base
+                         flex items-center justify-center gap-2 focus:outline-none focus:ring-2
+                         focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-transparent
+                         min-h-[52px] mt-2"
             >
               {loading ? (
                 <>
@@ -127,16 +150,17 @@ export default function LoginPage() {
                   </svg>
                   Signing in...
                 </>
-              ) : (
-                'LOGIN'
-              )}
+              ) : 'LOGIN'}
             </button>
           </form>
 
-          <p className="text-slate-500 text-xs text-center mt-6">
-            No self-registration. Contact your administrator to create an account.
+          <p className="text-slate-600 text-xs text-center mt-6">
+            No self-registration. Contact your administrator.
           </p>
         </div>
+
+        {/* Spacer for iPhone home bar */}
+        <div className="h-safe-bottom sm:hidden" style={{ height: 'env(safe-area-inset-bottom, 8px)' }} />
       </div>
     </div>
   )

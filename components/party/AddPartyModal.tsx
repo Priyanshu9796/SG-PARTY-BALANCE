@@ -26,7 +26,6 @@ export default function AddPartyModal({ onClose, onSuccess }: Props) {
   async function onSubmit(data: PartyFormData) {
     setServerError('')
     const supabase = createClient()
-
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
@@ -37,28 +36,22 @@ export default function AddPartyModal({ onClose, onSuccess }: Props) {
     })
 
     if (error) {
-      if (error.code === '23505') {
-        setServerError('A party with this name already exists.')
-      } else {
-        setServerError(error.message)
-      }
+      setServerError(error.code === '23505' ? 'A party with this name already exists.' : error.message)
       return
     }
-
     onSuccess()
   }
 
   return (
-    <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+    <div
+      className="modal-overlay"
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+    >
       <div className="modal-box animate-slide-up">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-bold text-slate-900">Add New Party</h2>
-          <button
-            id="close-add-party-modal"
-            onClick={onClose}
-            className="btn-ghost p-1"
-          >
+          <button id="close-add-party-modal" onClick={onClose} className="btn-ghost p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -74,11 +67,10 @@ export default function AddPartyModal({ onClose, onSuccess }: Props) {
               type="text"
               placeholder="e.g. ABC Electronics"
               className="form-input"
+              autoCapitalize="words"
               {...register('party_name')}
             />
-            {errors.party_name && (
-              <p className="form-error">{errors.party_name.message}</p>
-            )}
+            {errors.party_name && <p className="form-error">{errors.party_name.message}</p>}
           </div>
 
           {/* Party Type */}
@@ -91,9 +83,7 @@ export default function AddPartyModal({ onClose, onSuccess }: Props) {
                 <label
                   key={type}
                   htmlFor={`type-${type}`}
-                  className="relative flex items-center gap-3 p-3.5 border-2 rounded-xl cursor-pointer
-                             transition-all duration-150 has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50
-                             border-slate-200 hover:border-slate-300"
+                  className="party-type-option"
                 >
                   <input
                     id={`type-${type}`}
@@ -102,12 +92,6 @@ export default function AddPartyModal({ onClose, onSuccess }: Props) {
                     className="sr-only"
                     {...register('party_type')}
                   />
-                  <div className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center
-                    ${type === 'supplier' ? 'border-blue-500' : 'border-emerald-500'}`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      type === 'supplier' ? 'bg-blue-500' : 'bg-emerald-500'
-                    } opacity-0 peer-checked:opacity-100`} />
-                  </div>
                   <div>
                     <p className="text-sm font-semibold text-slate-800 capitalize">{type}</p>
                     <p className="text-xs text-slate-500">
@@ -117,9 +101,7 @@ export default function AddPartyModal({ onClose, onSuccess }: Props) {
                 </label>
               ))}
             </div>
-            {errors.party_type && (
-              <p className="form-error">{errors.party_type.message}</p>
-            )}
+            {errors.party_type && <p className="form-error">{errors.party_type.message}</p>}
           </div>
 
           {/* Server Error */}
@@ -130,12 +112,8 @@ export default function AddPartyModal({ onClose, onSuccess }: Props) {
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn-secondary flex-1"
-            >
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1 justify-center">
               Cancel
             </button>
             <button

@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
+/* ============================================================
+   BASE RESET
+   ============================================================ */
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
   scroll-behavior: smooth;
+  /* Prevent font size inflation on iOS */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -14,10 +20,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: var(--font-inter, system-ui, sans-serif);
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
 }
 
 /* ============================================================
-   SIDEBAR
+   LAYOUT — SIDEBAR + MAIN CONTENT
    ============================================================ */
 .sidebar {
   position: fixed;
@@ -26,15 +34,16 @@ body {
   height: 100%;
   width: 240px;
   background-color: #0f172a;
-  display: flex;
+  /* display is controlled by Tailwind classes (hidden / flex) in the component */
   flex-direction: column;
   z-index: 40;
 }
 
-.main-content {
-  margin-left: 240px;
-  min-height: 100vh;
-  padding: 24px;
+/* Desktop: push content right of sidebar */
+/* Mobile: controlled by Tailwind classes in AppShell */
+.main-content-inner {
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 /* ============================================================
@@ -53,6 +62,7 @@ body {
 .btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   background-color: #4f46e5;
   color: #ffffff;
@@ -60,29 +70,25 @@ body {
   padding: 10px 16px;
   border-radius: 8px;
   font-size: 14px;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   cursor: pointer;
   border: none;
   text-decoration: none;
+  /* Touch target minimum */
+  min-height: 44px;
+  touch-action: manipulation;
+  user-select: none;
 }
 
-.btn-primary:hover {
-  background-color: #4338ca;
-}
-
-.btn-primary:focus {
-  outline: 2px solid #4f46e5;
-  outline-offset: 2px;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.btn-primary:hover { background-color: #4338ca; }
+.btn-primary:active { transform: scale(0.98); background-color: #3730a3; }
+.btn-primary:focus { outline: 2px solid #4f46e5; outline-offset: 2px; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   background-color: #ffffff;
   color: #374151;
@@ -91,23 +97,22 @@ body {
   border-radius: 8px;
   font-size: 14px;
   border: 1px solid #d1d5db;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   cursor: pointer;
   text-decoration: none;
+  min-height: 44px;
+  touch-action: manipulation;
+  user-select: none;
 }
 
-.btn-secondary:hover {
-  background-color: #f9fafb;
-}
-
-.btn-secondary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.btn-secondary:hover { background-color: #f9fafb; }
+.btn-secondary:active { transform: scale(0.98); background-color: #f3f4f6; }
+.btn-secondary:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn-danger {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   background-color: #dc2626;
   color: #ffffff;
@@ -116,13 +121,14 @@ body {
   border-radius: 8px;
   font-size: 14px;
   border: none;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   cursor: pointer;
+  min-height: 44px;
+  touch-action: manipulation;
 }
 
-.btn-danger:hover {
-  background-color: #b91c1c;
-}
+.btn-danger:hover { background-color: #b91c1c; }
+.btn-danger:active { transform: scale(0.98); }
 
 .btn-ghost {
   display: inline-flex;
@@ -133,16 +139,15 @@ body {
   font-size: 14px;
   padding: 6px 8px;
   border-radius: 6px;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
   cursor: pointer;
   background: none;
   border: none;
   text-decoration: none;
+  touch-action: manipulation;
 }
 
-.btn-ghost:hover {
-  color: #334155;
-}
+.btn-ghost:hover { color: #334155; background-color: #f1f5f9; }
 
 /* ============================================================
    FORM ELEMENTS
@@ -153,19 +158,26 @@ body {
   border: 1px solid #d1d5db;
   background-color: #ffffff;
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: 16px; /* 16px prevents iOS zoom on focus */
   color: #111827;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   outline: none;
+  /* Minimum touch target height */
+  min-height: 44px;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.form-input::placeholder {
-  color: #9ca3af;
-}
+.form-input::placeholder { color: #9ca3af; }
 
 .form-input:focus {
   border-color: #4f46e5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* Date input on iOS fix */
+input[type="date"].form-input {
+  display: block;
 }
 
 .form-label {
@@ -195,6 +207,7 @@ body {
   background-color: #dbeafe;
   color: #1e40af;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .badge-customer {
@@ -207,6 +220,7 @@ body {
   background-color: #d1fae5;
   color: #065f46;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .badge-bill {
@@ -218,6 +232,7 @@ body {
   font-weight: 700;
   background-color: #fef3c7;
   color: #92400e;
+  white-space: nowrap;
 }
 
 .badge-paid {
@@ -229,6 +244,7 @@ body {
   font-weight: 700;
   background-color: #d1fae5;
   color: #065f46;
+  white-space: nowrap;
 }
 
 .badge-received {
@@ -240,31 +256,94 @@ body {
   font-weight: 700;
   background-color: #ccfbf1;
   color: #115e59;
+  white-space: nowrap;
 }
 
 /* ============================================================
-   MODALS
+   MODALS — full-screen slide-up on mobile, centered on desktop
    ============================================================ */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.55);
   z-index: 50;
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* mobile: sheet from bottom */
   justify-content: center;
-  padding: 16px;
-  backdrop-filter: blur(4px);
+  padding: 0;
+  backdrop-filter: blur(3px);
+}
+
+/* On larger screens: center the modal */
+@media (min-width: 640px) {
+  .modal-overlay {
+    align-items: center;
+    padding: 16px;
+  }
 }
 
 .modal-box {
   background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  border-radius: 20px 20px 0 0; /* mobile: rounded top only */
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 448px;
-  padding: 24px;
+  max-height: 92vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px 20px 32px; /* extra bottom padding for iOS home bar */
   position: relative;
+}
+
+/* Pull bar indicator for mobile modal */
+.modal-box::before {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 4px;
+  background: #d1d5db;
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+@media (min-width: 640px) {
+  .modal-box {
+    border-radius: 16px;
+    max-width: 448px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    padding: 24px;
+  }
+
+  .modal-box::before {
+    display: none; /* hide pull bar on desktop */
+  }
+}
+
+/* ============================================================
+   PARTY TYPE OPTION (radio card in modals)
+   ============================================================ */
+.party-type-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  touch-action: manipulation;
+  user-select: none;
+  min-height: 56px;
+}
+
+.party-type-option:hover {
+  border-color: #a5b4fc;
+  background-color: #f5f3ff;
+}
+
+.party-type-option:has(input:checked) {
+  border-color: #4f46e5;
+  background-color: #eef2ff;
 }
 
 /* ============================================================
@@ -275,19 +354,27 @@ body {
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+}
+
+@media (min-width: 1024px) {
+  .stat-card {
+    padding: 20px;
+    gap: 4px;
+  }
 }
 
 /* ============================================================
-   DATA TABLE
+   DATA TABLE — scrollable on mobile
    ============================================================ */
 .data-table {
   width: 100%;
   font-size: 14px;
   border-collapse: collapse;
+  min-width: 480px; /* force horizontal scroll on small screens */
 }
 
 .data-table th {
@@ -297,24 +384,20 @@ body {
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 12px 16px;
+  padding: 10px 16px;
   border-bottom: 1px solid #e2e8f0;
   background-color: #f8fafc;
+  white-space: nowrap;
 }
 
 .data-table td {
-  padding: 14px 16px;
+  padding: 12px 16px;
   border-bottom: 1px solid #f1f5f9;
   color: #374151;
 }
 
-.data-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.data-table tbody tr:hover td {
-  background-color: rgba(248, 250, 252, 0.6);
-}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover td { background-color: rgba(248, 250, 252, 0.6); }
 
 /* ============================================================
    SIDEBAR NAV ITEMS
@@ -323,7 +406,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 11px 16px;
   color: #94a3b8;
   border-radius: 8px;
   margin: 0 8px;
@@ -335,24 +418,23 @@ body {
   background: none;
   border: none;
   width: calc(100% - 16px);
+  touch-action: manipulation;
 }
 
-.nav-item:hover {
-  color: #ffffff;
-  background-color: #1e293b;
-}
+.nav-item:hover { color: #ffffff; background-color: #1e293b; }
+.nav-item:active { background-color: #334155; }
 
 .nav-item-active {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 11px 16px;
   color: #ffffff;
   background-color: #4f46e5;
   border-radius: 8px;
   margin: 0 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -364,52 +446,41 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
-}
+.animate-fade-in { animation: fadeIn 0.2s ease-out; }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.animate-slide-up {
-  animation: slideUp 0.22s ease-out;
+/* Mobile: modal slides up from bottom */
+.animate-slide-up { animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+
+@media (min-width: 640px) {
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
+.animate-spin { animation: spin 1s linear infinite; }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
+/* ============================================================
+   SCROLLBAR (desktop)
+   ============================================================ */
+@media (min-width: 1024px) {
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 }
 
 /* ============================================================
-   SCROLLBAR
+   SAFE AREA — iPhone notch / home bar
    ============================================================ */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* ============================================================
-   UTILITY: has-[:checked] fallback via Tailwind v4 variant
-   ============================================================ */
-label:has(input[type="radio"]:checked) {
-  border-color: #4f46e5 !important;
-  background-color: #eef2ff !important;
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 4px);
+  }
 }

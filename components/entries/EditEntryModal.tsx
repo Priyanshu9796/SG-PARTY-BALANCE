@@ -73,12 +73,12 @@ export default function EditEntryModal({ party, entry, onClose, onSuccess }: Pro
     <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div className="modal-box animate-slide-up">
         {/* Header */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900">Edit Entry</h2>
-            <p className="text-xs text-slate-500 mt-0.5">{party.party_name} · {party.party_type.toUpperCase()}</p>
+            <p className="text-xs text-slate-500 mt-0.5 truncate max-w-[200px]">{party.party_name} · {party.party_type.toUpperCase()}</p>
           </div>
-          <button id="close-edit-entry-modal" onClick={onClose} className="btn-ghost p-1">
+          <button id="close-edit-entry-modal" onClick={onClose} className="btn-ghost p-1 shrink-0">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -87,17 +87,17 @@ export default function EditEntryModal({ party, entry, onClose, onSuccess }: Pro
           {/* Entry Type Selector */}
           <div>
             <label className="form-label">Entry Type <span className="text-red-500">*</span></label>
-            <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+            <div className="flex rounded-xl border border-slate-200 overflow-hidden">
               {entryTypes.map(type => (
                 <label
                   key={type}
                   htmlFor={`edit-entry-type-${type}`}
-                  className={`flex-1 text-center py-2.5 text-sm font-semibold cursor-pointer transition-colors ${
+                  className={`flex-1 text-center py-3 text-sm font-bold cursor-pointer transition-colors ${
                     selectedType === type
                       ? type === 'bill'
                         ? 'bg-amber-500 text-white'
-                        : 'bg-green-600 text-white'
-                      : 'bg-white text-slate-600 hover:bg-slate-50'
+                        : 'bg-emerald-600 text-white'
+                      : 'bg-white text-slate-600 hover:bg-slate-50 active:bg-slate-100'
                   }`}
                 >
                   <input
@@ -157,6 +157,7 @@ export default function EditEntryModal({ party, entry, onClose, onSuccess }: Pro
                 type="number"
                 step="0.01"
                 min="0.01"
+                inputMode="decimal"
                 className="form-input pl-8"
                 {...register('amount', { valueAsNumber: true })}
               />

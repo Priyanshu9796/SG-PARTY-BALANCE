@@ -57,11 +57,7 @@ export default function AddEntryModal({ party, onClose, onSuccess }: Props) {
       amount: data.amount,
     })
 
-    if (error) {
-      setServerError(error.message)
-      return
-    }
-
+    if (error) { setServerError(error.message); return }
     onSuccess()
   }
 
@@ -75,32 +71,36 @@ export default function AddEntryModal({ party, onClose, onSuccess }: Props) {
     <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div className="modal-box animate-slide-up">
         {/* Header */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900">Add Entry</h2>
-            <p className="text-xs text-slate-500 mt-0.5">{party.party_name} · {party.party_type.toUpperCase()}</p>
+            <p className="text-xs text-slate-500 mt-0.5 truncate max-w-[200px]">
+              {party.party_name} · {party.party_type.toUpperCase()}
+            </p>
           </div>
-          <button id="close-add-entry-modal" onClick={onClose} className="btn-ghost p-1">
+          <button id="close-add-entry-modal" onClick={onClose} className="btn-ghost p-1 shrink-0">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Entry Type Selector */}
+          {/* Entry Type Toggle */}
           <div>
             <label className="form-label">Entry Type <span className="text-red-500">*</span></label>
-            <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+            <div className="flex rounded-xl border border-slate-200 overflow-hidden">
               {entryTypes.map(type => (
                 <label
                   key={type}
                   htmlFor={`entry-type-${type}`}
-                  className={`flex-1 text-center py-2.5 text-sm font-semibold cursor-pointer transition-colors ${
-                    selectedType === type
+                  className={`
+                    flex-1 text-center py-3 text-sm font-bold cursor-pointer transition-colors
+                    ${selectedType === type
                       ? type === 'bill'
                         ? 'bg-amber-500 text-white'
-                        : 'bg-green-600 text-white'
-                      : 'bg-white text-slate-600 hover:bg-slate-50'
-                  }`}
+                        : 'bg-emerald-600 text-white'
+                      : 'bg-white text-slate-600 hover:bg-slate-50 active:bg-slate-100'
+                    }
+                  `}
                 >
                   <input
                     id={`entry-type-${type}`}
@@ -113,26 +113,22 @@ export default function AddEntryModal({ party, onClose, onSuccess }: Props) {
                 </label>
               ))}
             </div>
-            {errors.entry_type && (
-              <p className="form-error">{errors.entry_type.message}</p>
-            )}
           </div>
 
           {/* Entry Number */}
           <div>
             <label htmlFor="entry_number" className="form-label">
-              Entry / Reference No <span className="text-red-500">*</span>
+              Entry / Ref No <span className="text-red-500">*</span>
             </label>
             <input
               id="entry_number"
               type="text"
-              placeholder="e.g. INV-001 or PAY-001"
+              placeholder="e.g. INV-001"
               className="form-input"
+              autoCapitalize="characters"
               {...register('entry_number')}
             />
-            {errors.entry_number && (
-              <p className="form-error">{errors.entry_number.message}</p>
-            )}
+            {errors.entry_number && <p className="form-error">{errors.entry_number.message}</p>}
           </div>
 
           {/* Date */}
@@ -146,9 +142,7 @@ export default function AddEntryModal({ party, onClose, onSuccess }: Props) {
               className="form-input"
               {...register('entry_date')}
             />
-            {errors.entry_date && (
-              <p className="form-error">{errors.entry_date.message}</p>
-            )}
+            {errors.entry_date && <p className="form-error">{errors.entry_date.message}</p>}
           </div>
 
           {/* Amount */}
@@ -165,12 +159,11 @@ export default function AddEntryModal({ party, onClose, onSuccess }: Props) {
                 min="0.01"
                 placeholder="0.00"
                 className="form-input pl-8"
+                inputMode="decimal"
                 {...register('amount', { valueAsNumber: true })}
               />
             </div>
-            {errors.amount && (
-              <p className="form-error">{errors.amount.message}</p>
-            )}
+            {errors.amount && <p className="form-error">{errors.amount.message}</p>}
           </div>
 
           {/* Server Error */}
@@ -181,8 +174,8 @@ export default function AddEntryModal({ party, onClose, onSuccess }: Props) {
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="btn-secondary flex-1">
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1 justify-center">
               Cancel
             </button>
             <button

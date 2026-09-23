@@ -88,9 +88,7 @@ export default function EditPartyModal({ party, onClose, onSuccess }: Props) {
                 <label
                   key={type}
                   htmlFor={`edit-type-${type}`}
-                  className="relative flex items-center gap-3 p-3.5 border-2 rounded-xl cursor-pointer
-                             transition-all duration-150 has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50
-                             border-slate-200 hover:border-slate-300"
+                  className="party-type-option"
                 >
                   <input
                     id={`edit-type-${type}`}
