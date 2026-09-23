@@ -46,8 +46,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <BookOpen className="w-[18px] h-[18px] text-white" />
             </div>
             <div>
-              <p className="text-white font-bold text-sm leading-tight">Party Balance</p>
-              <p className="text-slate-500 text-xs">Payment Register</p>
+              <p className="text-white font-bold text-sm leading-tight">SG ENTERPRISES</p>
+              <p className="text-slate-500 text-xs">ACCOUNTS SOFTWARE</p>
             </div>
           </div>
         </div>
