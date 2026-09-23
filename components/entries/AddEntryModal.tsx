@@ -158,7 +158,7 @@ export default function AddEntryModal({ party, onClose, onSuccess }: Props) {
                 step="0.01"
                 min="0.01"
                 placeholder="0.00"
-                className="form-input pl-8"
+                className="form-input form-input-currency"
                 inputMode="decimal"
                 {...register('amount', { valueAsNumber: true })}
               />

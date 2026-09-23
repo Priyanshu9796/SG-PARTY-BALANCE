@@ -136,7 +136,7 @@ export default function PartiesClient({ parties }: Props) {
               placeholder="Search party..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="form-input pl-9 text-sm"
+              className="form-input form-input-search"
             />
             {search && (
               <button

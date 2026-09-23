@@ -158,7 +158,7 @@ export default function EditEntryModal({ party, entry, onClose, onSuccess }: Pro
                 step="0.01"
                 min="0.01"
                 inputMode="decimal"
-                className="form-input pl-8"
+                className="form-input form-input-currency"
                 {...register('amount', { valueAsNumber: true })}
               />
             </div>

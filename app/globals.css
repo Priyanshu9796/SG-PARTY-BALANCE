@@ -194,6 +194,23 @@ input[type="date"].form-input {
   margin-top: 4px;
 }
 
+/* ── Icon-prefixed inputs ──────────────────────────────────
+   These MUST come after .form-input in the file.
+   .form-input uses padding:10px 12px (shorthand), which
+   loads after Tailwind's @import and resets pl-8/pl-9.
+   These classes restore the correct left padding.
+   ────────────────────────────────────────────────────── */
+
+/* For search icon (w-4 icon at left-3) */
+.form-input-search {
+  padding-left: 2.375rem; /* 38px — icon 16px + gap */
+}
+
+/* For ₹ / $ currency prefix (narrower glyph) */
+.form-input-currency {
+  padding-left: 1.875rem; /* 30px — ₹ glyph ~12px + gap */
+}
+
 /* ============================================================
    BADGES
    ============================================================ */
